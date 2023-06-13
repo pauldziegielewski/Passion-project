@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Passion_project.Models.TrailDto>
+@{
+    ViewBag.Title = "List";
+}
+
+<h2>List of Trails in Ontario</h2>
+
+@foreach(var trail in Model)
+            {
+                <h6><a href="/Trail/Show/@trail.TrailID">@trail.TrailName</a></h6>
+             
+            }
+

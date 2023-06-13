@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "NewTrail";
+}
+
+<h2>Add Trail</h2>
+
+<form action="/Trail/PostNewTrail" method="POST">
+    <div>
+        <label>Trail Name:</label><input name="TrailName" type="text"/>
+    </div>
+    <div>
+        <label>Trail ID:</label><input name="LocationID" type="number"/>
+    </div>
+    <div>
+        <input type="submit" value-="Add Trail"/>
+    </div>
+</form>
+
