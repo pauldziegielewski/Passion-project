@@ -3,11 +3,11 @@
     ViewBag.Title = "View";
 }
 <h2>@Model.SelectedTrail.TrailName</h2>
-<nav>
+<nav class="nav">
     <ul>
-        <li><a href="/Trail/List">Go back to list</a></li>
-        <li><a href="/Trail/Edit/@Model.SelectedTrail.TrailID">Update</a></li>
-        <li><a style="color:#ab2020;" href="/Trail/DeleteConfirm/@Model.SelectedTrail.TrailID">Delete</a></li>
+        <li class="back"><a href="/Trail/List">Go back to list</a></li>
+        <li class="update"><a href="/Trail/Edit/@Model.SelectedTrail.TrailID">Update</a></li>
+        <li class="delete"><a style="color:#ab2020;" href="/Trail/DeleteConfirm/@Model.SelectedTrail.TrailID">Delete</a></li>
     </ul>
 </nav>
 <div class="row">
@@ -21,7 +21,7 @@
         }
         <div><img style="display:block; max-width:100%;" alt="@Model.SelectedTrail.TrailName" src="@imageurl" /></div>
 
-        <div>Location: <a href="/Location/LocationDetails/@Model.SelectedTrail.LocationName">@Model.SelectedTrail.LocationName</a></div>
+        <div class="location-div">Location: <a href="/Location/LocationDetails/@Model.SelectedTrail.LocationName">@Model.SelectedTrail.LocationName</a></div>
 
     </div>
     <div class="col-md-6 col-sm-12">
@@ -33,8 +33,8 @@
             <form method="POST" action="/Trail/Associate/@Model.SelectedTrail.TrailID">
                 <select name="FeatureID">
                     <option value="">Select Feature</option>
-                 
-                   
+
+
 
                 </select>
                 <input type="submit" value="Add Feature" />
@@ -43,3 +43,129 @@
     </div>
 
 </div>
+
+
+
+<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        color: #333;
+    }
+
+    h2 {
+        color: #006400;
+        margin-bottom: 20px;
+    }
+
+    h4 {
+        color: #006400;
+        margin-bottom: 10px;
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .col-md-6 {
+        width: 50%;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #d3e5d8;
+        color: #006400;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+    }
+
+        .btn:hover {
+            background-color: #b1d2ac;
+        }
+
+    .nav {
+        margin-bottom: 20px;
+    }
+
+        .nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .nav li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+    .back a {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #d3e5d8;
+        color: #006400;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+    }
+
+        .back a:hover {
+            background-color: #b1d2ac;
+        }
+
+    .update a {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #d3e5d8;
+        color: #006400;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+    }
+
+        .update a:hover {
+            background-color: #b1d2ac;
+        }
+
+    .delete a {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #e8c6c6;
+        color: #ab2020;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+    }
+
+        .delete a:hover {
+            background-color: #dca5a5;
+        }
+
+    .location-div {
+        margin-top: 10px;
+    }
+
+    form {
+        margin-top: 10px;
+    }
+
+    select {
+        width: 100%;
+        padding: 5px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+</style>
