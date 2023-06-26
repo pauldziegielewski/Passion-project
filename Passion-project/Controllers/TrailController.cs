@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Net.Http;
 using System.Diagnostics;
 using Passion_project.Models;
+using Passion_project.Models.ViewModels;
 using System.Web.Script.Serialization;
 
 
@@ -19,10 +20,10 @@ namespace Passion_project.Controllers
         static TrailController()
         {
             client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44367/api/traildata/");
+            client.BaseAddress = new Uri("https://localhost:44367/api/");
         }
 
-        // ---------------------- TRAIL LIST
+        // ---------------------------------- TRAIL LIST
         // GET: Trail/List
         public ActionResult List()
         {
@@ -31,45 +32,56 @@ namespace Passion_project.Controllers
 
             //client is anything that's accessing any information from server
             // HttpClient client = new HttpClient() { }; ==> this line of code was in use before (client = new HttpClient();) was added on line 17
-            string url = "listtrails";
-            HttpResponseMessage response = client.GetAsync(url).Result;
-
-            Debug.WriteLine(response.StatusCode);
-            Debug.WriteLine("The response code is");
-
-            //using Passion_project.Models; is needed for <TrailDto> to link up with this TrailController.cs
-            IEnumerable<TrailDto> trails = response.Content.ReadAsAsync<IEnumerable<TrailDto>>().Result;
-
-            Debug.WriteLine("Number of trails received: ");
-            Debug.WriteLine(trails.Count());
-
-            return View(trails);
-        }
-
-
-        // ----------------------- TRAIL DETAILS
-        // GET: Trail/Show/5
-        public ActionResult Show(int id)
-        {
-            //objective: communicate with our animal data api to retrieve one trail by ID
-            //curl https://localhost:44367/api/traildata/findtrail/{id}
-
-            //client is anything that's accessing any information from server
-            //HttpClient client = new HttpClient() { };
-            // url here is the end point for the full url string
-            string url = "findtrail/" + id;
+            string url = "traildata/listtrails";
             HttpResponseMessage response = client.GetAsync(url).Result;
 
             //Debug.WriteLine(response.StatusCode);
             //Debug.WriteLine("The response code is");
 
             //using Passion_project.Models; is needed for <TrailDto> to link up with this TrailController.cs
-            TrailDto selectedTrail = response.Content.ReadAsAsync <TrailDto>().Result;
+            IEnumerable<TrailDto> trails = response.Content.ReadAsAsync<IEnumerable<TrailDto>>().Result;
 
-            //Debug.WriteLine(selectedTrail.TrailName);
-            //Debug.WriteLine("trail received");
+            //Debug.WriteLine("Number of trails received: ");
+            //Debug.WriteLine(trails.Count());
 
-            return View(selectedTrail);
+            return View(trails);
+        }
+
+
+        // ----------------------------------------- TRAIL DETAILS
+        // GET: Trail/Show/5
+        public ActionResult Show(int id)
+        {
+            TrailDetails ViewModel = new TrailDetails();
+          
+            //objective: communicate with our animal data api to retrieve one trail by ID
+            //curl https://localhost:44367/api/traildata/findtrail/{id}
+
+            //client is anything that's accessing any information from server
+            //HttpClient client = new HttpClient() { };
+            // url here is the end point for the full url string
+            string url = "traildata/findtrail/" + id;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            //using Passion_project.Models; is needed for <TrailDto> to link up with this TrailController.cs
+            TrailDto SelectedTrail = response.Content.ReadAsAsync<TrailDto>().Result;
+
+            ViewModel.SelectedTrail = SelectedTrail;
+
+            url = "featuredata/listfeaturesintrail/" + id;
+            response = client.GetAsync(url).Result;
+            //IEnumerable<FeatureDto> ResponsibleFeatures = response.Content.ReadAsAsync<IEnumerable<FeatureDto>>().Result;
+
+                //ViewModel.ResponsibleFeatures = ResponsibleFeatures;
+
+            url = "featuredata/listfeaturesnotintrail/" + id;
+            response = client.GetAsync(url).Result;
+            //IEnumerable<FeatureDto> AvailableFeatures = response.Content.ReadAsAsync<IEnumerable<FeatureDto>>().Result;
+
+            //ViewModel.AvailableFeatures = AvailableFeatures;
+
+
+            return View(ViewModel);
         }
 
 
@@ -84,11 +96,16 @@ namespace Passion_project.Controllers
         // GET: Trail/NewTrail
         public ActionResult NewTrail()
         {
-            return View();
+            //Information about all locations in the system
+            //GET api/locationdata/listlocations
+            string url = "locationdata/listlocations";
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            IEnumerable<LocationDto> LocationOptions = response.Content.ReadAsAsync<IEnumerable<LocationDto>>().Result;
+            return View(LocationOptions);
         }
 
 
-        // ----------------------------- PostNewTrail POST
+        // --------------------------------------- PostNewTrail POST
         // POST: Trail/PostNewTrail
         [HttpPost]
         public ActionResult PostNewTrail(Trail trail)
@@ -98,9 +115,9 @@ namespace Passion_project.Controllers
             //objective: add a new trail into our system using API
 
             //curl -d @animal.json -H "Content-Type:application/json" https://localhost:44367/api/traildata/addtrail
-            string url = "addtrail";
+            string url = "traildata/addtrail";
 
-            //JavaScriptSerializer jss = new JavaScriptSerializer();
+            JavaScriptSerializer jss = new JavaScriptSerializer();
             
             string JsonPayload = jss.Serialize(trail);
 
@@ -123,48 +140,88 @@ namespace Passion_project.Controllers
             //return RedirectToAction("List");
         }
 
+
+        // ------------------------------------------- EDIT
         // GET: Trail/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+
+            UpdateTrail ViewModel = new UpdateTrail();
+
+          // The existing trail information
+            string url = "traildata/findtrail/"+ id;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            TrailDto SelectedTrail = response.Content.ReadAsAsync<TrailDto>().Result;
+            ViewModel.SelectedTrail = SelectedTrail;
+
+            url = "locationdata/listlocations/";
+            response = client.GetAsync(url).Result;
+            IEnumerable<LocationDto> LocationOptions = response.Content.ReadAsAsync<IEnumerable<LocationDto>>().Result;
+
+            ViewModel.LocationOptions = LocationOptions;
+
+            return View(ViewModel);
         }
 
-        // POST: Trail/Edit/5
+
+        // -------------------------------------------------- UPDATE
+        // POST: Trail/Update/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Update(int id, TrailDto Trail)
         {
-            try
-            {
-                // TODO: Add update logic here
 
-                return RedirectToAction("Index");
-            }
-            catch
+            string url = "traildata/updatetrail/"+ id;
+            string jsonPayload = jss.Serialize(Trail);
+            HttpContent content = new StringContent(jsonPayload);
+            content.Headers.ContentType.MediaType = "application/json";
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
+            
+            if (response.IsSuccessStatusCode )
             {
-                return View();
+                return RedirectToAction("List");
+            } 
+            else
+            {
+                return RedirectToAction("Error");
             }
         }
 
+
+
+        //-----------------------------------------DELETE CONFIRM TRAIL
         // GET: Trail/Delete/5
-        public ActionResult Delete(int id)
+   
+        public ActionResult DeleteConfirm(int id)
         {
-            return View();
+            string url = "traildata/findtrail/" + id;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            TrailDto selectedTrail = response.Content.ReadAsAsync<TrailDto>().Result;
+
+            return View(selectedTrail);
         }
 
         // POST: Trail/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
+            string url = "traildata/deletetrail/" + id;
+            HttpContent content = new StringContent("");
+            content.Headers.ContentType.MediaType = "application/json";
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
 
-                return RedirectToAction("Index");
-            }
-            catch
+            if (response.IsSuccessStatusCode)
             {
-                return View();
+                return RedirectToAction("List");
+            }
+            else
+            {
+                return RedirectToAction("Error");
             }
         }
+
+
+
+
+
     }
 }

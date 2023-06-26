@@ -1,0 +1,36 @@
+﻿@model Passion_project.Models.ViewModel.FeatureDetails
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<h2>@Model.SelectedFeature.FeatureName</h2>
+
+    <nav>
+        <ul>
+            <li><a href="/Feature/ListFeatures">Go back to list</a></li>
+            <li><a href="/Feature/Edit/@Model.SelectedFeature.FeatureID">Update</a></li>
+            <li><a style="color:#ab2020;" href="/Feature/DeleteConfirm/@Model.SelectedFeature.FeatureID">Delete</a></li>
+        </ul>
+    </nav>
+
+    <div class="row">
+
+        <div class="col-md-6 col-sm-12">
+            <div>Feature: @Model.SelectedFeature.FeatureName</div>
+        </div>
+  
+
+        <div>
+            <h5>This feature can be exeperienced at the following trails:</h5>
+            @foreach (var trail in Model.TrailFeatures)
+            {
+                <a href="/Trail/Show/@trail.TrailID">@trail.TrailName</a>
+            }
+        </div>
+
+  </div>
+
+
+

@@ -1,0 +1,33 @@
+﻿﻿@model Passion_project.Models.FeatureDto
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Update Feature</h2>
+
+<nav>
+    <ul>
+        <li><a href="/Feature/ListFeatures">Go back to list</a></li>
+
+        <li><a style="color:#ab2020;" href="/Feature/DeleteConfirm/@Model.FeatureID">Delete</a></li>
+    </ul>
+</nav>
+
+<form action="/Feature/ListFeatures/@Model.FeatureID" method="POST">
+
+    <div style="display:none;">
+        @* Pass through the Keeper ID *@
+        <input type="text" name="FeatureID" value="@Model.FeatureID" />
+    </div>
+
+    <div>
+        <label>Feature Name:</label> <input type="text" name="FeatureName" value="@Model.FeatureName" />
+    </div>
+   
+    <div>
+        <input type="submit" value="Update Feature" />
+
+    </div>
+
+</form>

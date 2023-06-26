@@ -1,0 +1,21 @@
+﻿﻿@model Passion_project.Models.LocationDto
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Update Species</h2>
+<form action="/Location/Update/@Model.LocationID" method="POST">
+    <div style="display:none;">
+        @* Pass through the Species ID *@
+        <input type="text" name="LocationID" value="@Model.LocationID" />
+    </div>
+    <div>
+        <label>Name:</label> <input type="text" name="LocationName" value="@Model.LocationName" />
+    </div>
+  
+    <div>
+        <input type="submit" value="Update Location" />
+
+    </div>
+</form>

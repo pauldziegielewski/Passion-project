@@ -15,13 +15,13 @@ namespace Passion_project.Controllers
     public class TrailDataController : ApiController
     {
 
-
-
-
         private ApplicationDbContext db = new ApplicationDbContext();
 
-
         // ---------------------------- LIST TRAILS----------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         // GET: api/TrailData/ListTrails
         [HttpGet]
         public IEnumerable<TrailDto> ListTrails()
@@ -33,6 +33,7 @@ namespace Passion_project.Controllers
             {
                 TrailID = a.TrailID,
                 TrailName = a.TrailName,
+                LocationID = a.LocationID,
                 LocationName = a.Location.LocationName
          
 
@@ -44,31 +45,114 @@ namespace Passion_project.Controllers
 
 
 
-
-        // ------------------------------ FIND TRAIL --------
-        // GET: api/TrailData/FindTrail/5
+        // ---------------------- LIST TRAILS FOR LOCATIONS----------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        // GET: api/TrailData/ListTrailsForLocation
         [HttpGet]
-        [ResponseType(typeof(Trail))]
-        public IHttpActionResult FindTrail(int id)
-        {
-            Trail trail = db.Trails.Find(id);
-            TrailDto TrailDto = new TrailDto()
-            {
-                TrailID = trail.TrailID,
-                TrailName = trail.TrailName,
-                LocationName = trail.Location.LocationName
-            };
-            if (trail == null)
-            {
-                return NotFound();
-            }
+        [ResponseType(typeof(TrailDto))]
 
-            return Ok(TrailDto);
+        public IHttpActionResult ListTrailsForLocation(int id)
+        {
+            List<Trail> Trails = db.Trails.Where(a=>a.LocationID==id).ToList();
+            List<TrailDto> TrailDtos = new List<TrailDto>();
+
+            Trails.ForEach(a => TrailDtos.Add(new TrailDto()
+            {
+                TrailID = a.TrailID,
+                TrailName = a.TrailName,
+                LocationID = a.LocationID,
+                LocationName = a.Location.LocationName
+
+
+            }));
+
+            return Ok(TrailDtos);
+
         }
 
 
 
+
+
+
+        // ------------ LIST TRAILS Associated with FEATURES----------
+        /// <summary>
+        /// Gathers trails that are assocaited with a particular feature
+        /// </summary>
+        /// <returns>
+        /// HEADER: 200 (OK)
+        /// CONTENT: all trails in the database, including their location and feature
+        /// </returns>
+        /// <param name="id">FeatureID</param>
+        /// <example>
+        /// GET: api/traildata/ListTrailFeatures
+        /// </example>
+   
+        [HttpGet]
+        [ResponseType(typeof(TrailDto))]
+        public IHttpActionResult ListTrailFeatures(int id)
+        {
+            //All trails that match with a particular feature
+            List<Trail> Trails = db.Trails.Where(
+                t => t.Features.Any(
+                    f=>f.FeatureID==id
+                    )).ToList();
+            List<TrailDto> TrailDtos = new List<TrailDto>();
+
+            Trails.ForEach(a => TrailDtos.Add(new TrailDto()
+            {
+                TrailID = a.TrailID,
+                TrailName = a.TrailName,
+                LocationID = a.LocationID,
+                LocationName = a.Location.LocationName
+
+
+            }));
+
+            return Ok(TrailDtos);
+
+        }
+
+
+
+        // ------------------------------ FIND TRAIL --------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        // GET: api/TrailData/FindTrail/5
+        [HttpGet]
+        [ResponseType(typeof(TrailDto))]
+        public IHttpActionResult FindTrail(int id)
+        {
+            List<Trail> Trails = db.Trails.ToList();
+            List<TrailDto> TrailDtos = new List<TrailDto>();
+
+            Trails.ForEach(a => TrailDtos.Add(new TrailDto()
+            {
+                TrailID = a.TrailID,
+                TrailName = a.TrailName,
+                LocationID = a.Location.LocationID,
+                LocationName = a.Location.LocationName
+
+            }));
+            
+
+            return Ok(TrailDtos.FirstOrDefault(t => t.TrailID == id));
+        }
+
+
         // --------------------- UPDATE TRAIL----------------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="trail"></param>
+        /// <returns></returns>
         // POST: api/TrailData/UpdateTrail/5
         // {
         //"trailID": 1,
@@ -112,8 +196,15 @@ namespace Passion_project.Controllers
 
             return StatusCode(HttpStatusCode.NoContent);
         }
+       
+
 
         // -------------------------------- ADD TRAIL--------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="trail"></param>
+        /// <returns></returns>
         // POST: api/TrailData/AddTrail
         // copy json folder path then in command prompt cd C:\Users\paulj\Desktop\Web Development\5112\Christine\Passion-project\Passion-project\JSON => then
         //curl -d @trail.json -H "Content-type:application/json" https://localhost:44367/api/traildata/addtrail
@@ -132,7 +223,14 @@ namespace Passion_project.Controllers
             return CreatedAtRoute("DefaultApi", new { id = trail.TrailID }, trail);
         }
 
+
+
         // ----------------------- DELETE TRAIL -------------
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE: api/TrailData/DeleteTrail/5
         //curl -d "" https://localhost:44367/api/traildata/deletetrail/1 is the alternative in command prompt
         [ResponseType(typeof(Trail))]

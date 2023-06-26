@@ -12,4 +12,11 @@ namespace Passion_project.Models
         public int LocationID { get; set; }
         public string LocationName { get; set; }
     }
+
+
+    public class LocationDto
+    {
+        public int LocationID { get; set; }
+        public string LocationName { get; set; }
+    }
 }

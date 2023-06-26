@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace Passion_project.Models
 {
@@ -17,4 +17,12 @@ namespace Passion_project.Models
         //A (FEATURE) CAN BELONG TO MULTIPLE HIKING TRAILS
         public ICollection <Trail> Trails { get; set; }
     }
+
+    public class FeatureDto
+    {
+        public int FeatureID { get; set; }
+        public string FeatureName { get; set; }
+    }
+
+
 }

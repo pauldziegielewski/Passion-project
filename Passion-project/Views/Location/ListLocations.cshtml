@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Passion_project.Models.LocationDto>
+@{
+    ViewBag.Title = "ListLocations";
+}
+
+<h1>List Locations</h1>
+
+<a href="/Location/New">New Location</a>
+@foreach (var location in Model)
+{
+
+    <h3><a href="/Location/LocationDetails/@location.LocationID">@location.LocationName</a></h3>
+
+}
+
+

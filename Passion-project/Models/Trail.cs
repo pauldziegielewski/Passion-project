@@ -29,6 +29,11 @@ namespace Passion_project.Models
     {
         public int TrailID { get; set; }
         public string TrailName { get; set; } 
+
+        public int LocationID { get; set; }
         public string LocationName { get; set; }
+
+        public bool TrailHasPic { get; set; }
+        public string PicExtension { get; set; }
     }
 }

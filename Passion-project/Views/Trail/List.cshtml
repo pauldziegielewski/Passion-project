@@ -3,11 +3,32 @@
     ViewBag.Title = "List";
 }
 
-<h2>List of Trails in Ontario</h2>
+<h1>List of Trails in Ontario</h1>
+<a href="/Trail/NewTrail">New Trail</a>
+
+        <div class="list-container"
 
 @foreach(var trail in Model)
             {
-                <h6><a href="/Trail/Show/@trail.TrailID">@trail.TrailName</a></h6>
-             
+   
+                <p><a href="/Trail/Show/@trail.TrailID">@trail.TrailName</a></p>
             }
+        <div/>
+
+
+<style>
+
+    .list-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: pink;
+        border-radius: 5px;
+    }
+
+
+
+
+</style>
 

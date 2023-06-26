@@ -1,0 +1,18 @@
+﻿@model Passion_project.Models.TrailDto
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = null; // Set the layout to null for this view
+}
+
+<h2>Delete Trail</h2>
+
+<h3>Are you sure you want to delete the trail with ID @Model.TrailID?</h3>
+<h4>Trail name: @Model.TrailName</h4>
+<h4>Trail location: @Model.LocationName</h4>
+
+@using (Html.BeginForm())
+{
+    <input type="submit" value="Delete" class="btn btn-danger" />
+    @Html.ActionLink("Cancel", "List", null, new { @class = "btn btn-default" })
+}

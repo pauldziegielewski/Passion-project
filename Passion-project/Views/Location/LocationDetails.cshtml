@@ -1,0 +1,53 @@
+﻿
+
+﻿@model Passion_project.Models.ViewModels.LocationDetails
+
+
+@{
+    ViewBag.Title = "View";
+}
+<nav>
+    <ul>
+        <li><a href="/Location/Listlocations">Go back to list</a></li>
+        <li><a href="/Location/Edit/@Model.SelectedLocation.LocationID">Update</a></li>
+        <li>
+            <a style="color:#ab2020;" href="/Location/DeleteConfirm/@Model.SelectedLocation.LocationID">Delete</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="row">
+    <div class="col-md-6 col-sm-12">
+
+  
+    </div>
+    <div class="col-md-6 col-sm-12 test">
+        <h3>@(Model.SelectedLocation.LocationName)</h3>
+        @foreach (var trail in Model.RelatedTrails)
+        {
+            <a class="LocationList"href="/Trail/Show/@trail.TrailID">@trail.TrailName</a>
+
+        }
+    </div>
+</div>
+
+
+
+<style>
+    h3 {
+       color: white;
+    }
+    .test {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        padding: 10px;
+        border-radius: 8px;
+        background: black;
+    }
+
+    a {
+        text-decoration: none;
+    }
+</style>

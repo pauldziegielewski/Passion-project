@@ -182,7 +182,11 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\FeatureController.cs" />
+    <Compile Include="Controllers\FeatureDataController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LocationController.cs" />
+    <Compile Include="Controllers\LocationDataController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TrailController.cs" />
     <Compile Include="Controllers\TrailDataController.cs" />
@@ -224,6 +228,10 @@
     <Compile Include="Models\Location.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Trail.cs" />
+    <Compile Include="Models\ViewModel\FeatureDetails.cs" />
+    <Compile Include="Models\ViewModel\LocationDetails.cs" />
+    <Compile Include="Models\ViewModel\TrailDetails.cs" />
+    <Compile Include="Models\ViewModel\UpdateTrail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -303,6 +311,19 @@
     <Content Include="Views\Trail\Show.cshtml" />
     <Content Include="Views\Trail\NewTrail.cshtml" />
     <Content Include="Views\Trail\Error.cshtml" />
+    <Content Include="Views\Trail\Edit.cshtml" />
+    <Content Include="Views\Feature\ListFeatures.cshtml" />
+    <Content Include="Views\Location\ListLocations.cshtml" />
+    <Content Include="Views\Feature\Details.cshtml" />
+    <Content Include="Views\Feature\Error.cshtml" />
+    <Content Include="Views\Trail\Delete.cshtml" />
+    <Content Include="Views\Location\LocationDetails.cshtml" />
+    <Content Include="Views\Feature\NewFeature.cshtml" />
+    <Content Include="Views\Feature\Edit.cshtml" />
+    <Content Include="Views\Trail\DeleteConfirm.cshtml" />
+    <Content Include="Views\Location\DeleteConfirm.cshtml" />
+    <Content Include="Views\Location\Edit.cshtml" />
+    <Content Include="Views\Location\New.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

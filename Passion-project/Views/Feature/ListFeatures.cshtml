@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Passion_project.Models.FeatureDto>
+@{
+    ViewBag.Title = "ListFeatures";
+}
+
+<h1>List Features</h1>
+
+<a href="/Feature/Update">New Feature</a>
+
+@foreach(var feature in Model)
+            {
+                <h4><a href="/Feature/Details/@feature.FeatureID">@feature.FeatureName</a></h4>
+             
+            }
+

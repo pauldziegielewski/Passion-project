@@ -1,10 +1,45 @@
-﻿@model Passion_project.Models.TrailDto
-
+﻿@model Passion_project.Models.ViewModels.TrailDetails
 @{
-    ViewBag.Title = "Show";
+    ViewBag.Title = "View";
 }
+<h2>@Model.SelectedTrail.TrailName</h2>
+<nav>
+    <ul>
+        <li><a href="/Trail/List">Go back to list</a></li>
+        <li><a href="/Trail/Edit/@Model.SelectedTrail.TrailID">Update</a></li>
+        <li><a style="color:#ab2020;" href="/Trail/DeleteConfirm/@Model.SelectedTrail.TrailID">Delete</a></li>
+    </ul>
+</nav>
+<div class="row">
+    <div class="col-md-6 col-sm-12">
+        @{
+            string imageurl = "/Content/Images/Trails/default.jpg";
+            if (Model.SelectedTrail.TrailHasPic)
+            {
+                imageurl = "/Content/Images/Animals/" + Model.SelectedTrail.TrailID + "." + Model.SelectedTrail.PicExtension;
+            }
+        }
+        <div><img style="display:block; max-width:100%;" alt="@Model.SelectedTrail.TrailName" src="@imageurl" /></div>
 
-<a href="/Trail/List">Go back to list</a>
-<h6>@Model.TrailName</h6>
-<h6>@Model.LocationName</h6>
+        <div>Location: <a href="/Location/LocationDetails/@Model.SelectedTrail.LocationName">@Model.SelectedTrail.LocationName</a></div>
 
+    </div>
+    <div class="col-md-6 col-sm-12">
+        <h4>Trails in this location: @Model.SelectedTrail.TrailName</h4>
+
+
+        <div>
+
+            <form method="POST" action="/Trail/Associate/@Model.SelectedTrail.TrailID">
+                <select name="FeatureID">
+                    <option value="">Select Feature</option>
+                 
+                   
+
+                </select>
+                <input type="submit" value="Add Feature" />
+            </form>
+        </div>
+    </div>
+
+</div>
