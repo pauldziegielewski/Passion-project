@@ -19,7 +19,7 @@ namespace Passion_project.Controllers
             client = new HttpClient();
             client.BaseAddress = new Uri("https://localhost:44367/api/");
         }
-        // ------------------------------------------------- LIST FEATURES
+        // ------------------------------- LIST FEATURES
         // GET: Location/ListLocations
         public ActionResult ListLocations()
         {
@@ -38,10 +38,19 @@ namespace Passion_project.Controllers
 
 
 
-        //--------------------------------------------- FEATURE DETAILS
-        //GET: Feature/Details/5
-        public ActionResult LocationDetails(int id)
+        //---------------------------- LOCATION DETAILS
+        //GET: Location/LocationDetails/5
+        public ActionResult LocationDetails(int? id)
         {
+
+            if (id == null)
+            {
+                // Handle the case where id is null
+                // Return an appropriate response or redirect
+                // For example:
+                return RedirectToAction("Index");
+            }
+
             LocationDetails ViewModel = new LocationDetails();
             string url = "locationdata/findlocation/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
@@ -50,7 +59,7 @@ namespace Passion_project.Controllers
 
             ViewModel.SelectedLocation = SelectedLocation;
 
-
+            
             url = "traildata/ListTrailsForLocation/" + id;
             response = client.GetAsync(url).Result;
             IEnumerable<TrailDto> RelatedTrails = response.Content.ReadAsAsync<IEnumerable<TrailDto>>().Result;
@@ -64,8 +73,8 @@ namespace Passion_project.Controllers
         }
 
 
-        // --------------------------------------------- ADD FEATURE GET
-        // GET: Feature/Create
+        // --------------------------------------- ADD LOCATION GET
+        // GET: Location/Create
         public ActionResult New()
         {
             return View();

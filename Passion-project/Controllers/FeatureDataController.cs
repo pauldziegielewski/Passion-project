@@ -17,7 +17,7 @@ namespace Passion_project.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
 
-        // -------------------------------------------- LIST FEATURES
+        // ------------------------------ LIST FEATURES
         // GET: api/FeatureData/ListFeatures
         [HttpGet]
         public IHttpActionResult ListFeatures()
@@ -38,9 +38,11 @@ namespace Passion_project.Controllers
 
 
 
-        // ------------------------------------LIST FEATURES
-        // GET: api/FeatureData/ListFeatures
+        // ----------------------LIST FEATURES FOR TRAIL
+
+        // GET: api/FeatureData/ListFeaturesForTrail
         [HttpGet]
+        [ResponseType(typeof(FeatureDto))]
         public IHttpActionResult ListFeaturesForTrail(int id)
         {
             List<Feature> Features = db.Features.Where(
@@ -62,6 +64,29 @@ namespace Passion_project.Controllers
  
             return Ok(FeatureDtos);
         }
+
+
+        /// GET: api/KeeperData/ListKeepersNotCaringForAnimal/1
+        /// </example>
+        [HttpGet]
+        [ResponseType(typeof(FeatureDto))]
+        public IHttpActionResult ListFeaturesNotInTrail(int id)
+        {
+            List<Feature> Features = db.Features.Where(
+                k => !k.Trails.Any(
+                    a => a.TrailID == id)
+                ).ToList();
+            List<FeatureDto> FeatureDtos = new List<FeatureDto>();
+
+            Features.ForEach(f => FeatureDtos.Add(new FeatureDto()
+            {
+                FeatureID = f.FeatureID,
+                FeatureName = f.FeatureName
+            }));
+
+            return Ok(FeatureDtos);
+        }
+
 
         // ------------------------------------------- FIND FEATURE GET
         // GET: api/FeatureData/FindFeature/5
@@ -120,19 +145,42 @@ namespace Passion_project.Controllers
 
 
         // --------------------------------------------- UPDATE FEATURE
-        // POST: api/FeatureData
+        // POST: api/UpdateFeature
         [ResponseType(typeof(Feature))]
-        public IHttpActionResult PostFeature(Feature feature)
+        [HttpPost]
+        public IHttpActionResult UpdateFeature(int id, Feature Feature)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Features.Add(feature);
-            db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = feature.FeatureID }, feature);
+            if (id != Feature.FeatureID)
+            {
+
+                return BadRequest();
+            }
+
+            db.Entry(Feature).State = EntityState.Modified;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!FeatureExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return StatusCode(HttpStatusCode.NoContent);
+
         }
 
 
@@ -140,6 +188,7 @@ namespace Passion_project.Controllers
         // ----------------------------------------------- DELETE FEATURE
         // DELETE: api/FeatureData/5
         [ResponseType(typeof(Feature))]
+        [HttpPost]
         public IHttpActionResult DeleteFeature(int id)
         {
             Feature feature = db.Features.Find(id);
@@ -167,5 +216,39 @@ namespace Passion_project.Controllers
         {
             return db.Features.Count(e => e.FeatureID == id) > 0;
         }
+
+
+
+        // ------------------------------------ ADD FEATURE
+        /// <summary>
+        /// Adds an Feature to the system
+        /// </summary>
+        /// <param name="Feature">JSON FORM DATA of an Feature</param>
+        /// <returns>
+        /// HEADER: 201 (Created)
+        /// CONTENT: Feature ID, Feature Data
+        /// or
+        /// HEADER: 400 (Bad Request)
+        /// </returns>
+        /// <example>
+        /// POST: api/FeatureData/AddFeature
+        /// FORM DATA: Feature JSON Object
+        /// </example>
+        [ResponseType(typeof(Feature))]
+        [HttpPost]
+        public IHttpActionResult AddFeature(Feature Feature)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            db.Features.Add(Feature);
+            db.SaveChanges();
+
+            return CreatedAtRoute("DefaultApi", new { id = Feature.FeatureID }, Feature);
+        }
+
+
     }
 }

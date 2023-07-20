@@ -17,7 +17,7 @@ namespace Passion_project.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
 
-        // ----------------------------------------------- LIST LOCATIONS
+        // ------------------------------ LIST LOCATIONS
 
         /// <summary>
         /// Returns all Locations in the system.

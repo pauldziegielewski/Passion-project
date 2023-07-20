@@ -9,9 +9,13 @@
 
     <nav>
         <ul>
+
             <li><a class="btn" href="/Feature/ListFeatures">Go back to list</a></li>
+
             <li><a class="btn"href="/Feature/Edit/@Model.SelectedFeature.FeatureID">Update</a></li>
+
             <li><a class="delete"style="color:#ab2020;" href="/Feature/DeleteConfirm/@Model.SelectedFeature.FeatureID">Delete</a></li>
+
         </ul>
     </nav>
 
@@ -23,7 +27,7 @@
   
 
         <div>
-            <h5>This feature can be exeperienced at the following trails:</h5>
+            <h5>This feature can be experienced at the following trails:</h5>
             @foreach (var trail in Model.TrailFeatures)
             {
                 <a href="/Trail/Details/@trail.TrailID">@trail.TrailName</a>

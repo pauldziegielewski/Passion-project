@@ -6,13 +6,16 @@
 
 <h2>Update Trail</h2>
 <form action="/Trail/Update/@Model.SelectedTrail.TrailID" method="POST">
+
     <div style="display:none;">
         @* Pass through the trail ID *@
         <input type="text" name="TrailID" value="@Model.SelectedTrail.TrailID" />
     </div>
+
     <div>
         <label>Name:</label> <input type="text" name="TrailName" value="@Model.SelectedTrail.TrailName" />
     </div>
+
     <div>
         <label>Location ID:</label>
         <select name="LocationID">
@@ -23,13 +26,15 @@
                 {
                     selected = "selected";
                 }
-                <option value="@Location.LocationID" @selected>@Location.LocationName</option>
+                <option value="@Location.LocationID" >@Location.LocationName</option>
             }
         </select>
     </div>
+
     <div>
         <input type="submit" value="Update Location" />
     </div>
+
 </form>
 
 

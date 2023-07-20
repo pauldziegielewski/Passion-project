@@ -9,23 +9,26 @@
 <form action="/Trail/PostNewTrail" method="POST">
 
     <div>
-        <label>Trail Name:</label><input name="TrailName" type="text"/>
+        <label>Trail Name:</label><input name="TrailName" type="text" />
     </div>
 
     <div>
         <label>Locations:</label>
-       <select name="LocationID">
-           
-        @foreach(var location in @Model)
-        {
-            <option value="@location.LocationID">@location.LocationName</option>
-    
-        }
+        <select name="LocationID">
+
+            @foreach (var location in @Model)
+            {
+                <option value="@location.LocationID">@location.LocationName</option>
+
+            }
         </select>
     </div>
 
+   
+
+
     <div>
-        <input type="submit" value="Add Trail"/>
+        <input type="submit" value="Add Trail" />
     </div>
 
 </form>

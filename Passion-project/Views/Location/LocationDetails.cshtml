@@ -4,13 +4,20 @@
 @{
     ViewBag.Title = "View";
 }
+
+
+
 <nav>
     <ul>
+
         <li><a class="btn"href="/Location/Listlocations">Go back to list</a></li>
+
         <li><a class="btn"href="/Location/Edit/@Model.SelectedLocation.LocationID">Update</a></li>
+
         <li>
-            <a class="delete" style="color:#ab2020;" href="/Location/DeleteConfirm/@Model.SelectedLocation.LocationID">Delete</a>
+           <a class="delete" style="color:#ab2020;" href="/Location/DeleteConfirm/@Model.SelectedLocation.LocationID">Delete</a>
         </li>
+
     </ul>
 </nav>
 

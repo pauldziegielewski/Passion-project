@@ -15,5 +15,7 @@ namespace Passion_project.Models.ViewModels
         // All locations to choose from when updating trail
         public IEnumerable<LocationDto> LocationOptions { get; set; }
 
+        // FEATURES TO BE INCLUDED???
+
     }
 }

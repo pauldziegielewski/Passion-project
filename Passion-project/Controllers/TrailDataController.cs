@@ -17,7 +17,7 @@ namespace Passion_project.Controllers
 
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // ---------------------------- LIST TRAILS----------
+        // ----------------------- LIST TRAILS----------
         /// <summary>
         /// 
         /// </summary>
@@ -35,27 +35,37 @@ namespace Passion_project.Controllers
                 TrailName = a.TrailName,
                 LocationID = a.LocationID,
                 LocationName = a.Location.LocationName
-         
+
 
             }));
 
             return TrailDtos;
-            
+
         }
 
 
 
-        // ---------------------- LIST TRAILS FOR LOCATIONS----------
+        // ---------- LIST TRAILS FOR LOCATIONS----------
         /// <summary>
-        /// 
+        /// Gather information about all the trails related to a particular location
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// Header: 200 (ok)
+        /// Content: all trails in the data, including their associated location
+        /// </returns>
+        /// <param> name="id">Location ID </param>
         // GET: api/TrailData/ListTrailsForLocation
         [HttpGet]
         [ResponseType(typeof(TrailDto))]
 
-        public IHttpActionResult ListTrailsForLocation(int id)
-        {
+        public IHttpActionResult ListTrailsForLocation(int? id) {
+
+            if (id == null)
+            {
+                return BadRequest("Location ID is required");
+            }
+        
+
             List<Trail> Trails = db.Trails.Where(a=>a.LocationID==id).ToList();
             List<TrailDto> TrailDtos = new List<TrailDto>();
 
@@ -78,7 +88,7 @@ namespace Passion_project.Controllers
 
 
 
-        // ------------ LIST TRAILS Associated with FEATURES----------
+        // ----------------------------------------------------------------- LIST TRAILS Associated with FEATURES----------
         /// <summary>
         /// Gathers trails that are assocaited with a particular feature
         /// </summary>
@@ -264,6 +274,59 @@ namespace Passion_project.Controllers
         private bool TrailExists(int id)
         {
             return db.Trails.Count(e => e.TrailID == id) > 0;
+        }
+
+        /// <summary>
+        /// Associates a particular feature with a particular trail
+        /// </summary>
+        /// <param name="TrailID">The trail ID</param>
+        /// <param name="FeatureID">The feature id</param>
+        /// <returns>
+        /// Header: 200 (ok)
+        /// or
+        /// Header: 404 (not found)
+        /// </returns>
+        [HttpPost]
+        [Route("api/traildata/AssociateTrailWithFeature")]
+        public IHttpActionResult AssociateTrailWithFeature(int TrailID, int FeatureID)
+        {
+            Trail SelectedTrail = db.Trails.Include(t => t.Features).Where(t=>t.TrailID == TrailID).FirstOrDefault();
+
+            Feature SelectedFeature = db.Features.Find(FeatureID);
+
+            // SelectedFeature.Trail.Add(SelectedTrail); -> if this method is in the FeatureController
+
+            SelectedTrail.Features.Add(SelectedFeature);
+            db.SaveChanges();
+            return Ok();
+        }
+
+
+
+
+        /// <summary>
+        /// Associates a particular feature with a particular trail
+        /// </summary>
+        /// <param name="TrailID">The trail ID</param>
+        /// <param name="FeatureID">The feature id</param>
+        /// <returns>
+        /// Header: 200 (ok)
+        /// or
+        /// Header: 404 (not found)
+        /// </returns>
+        [HttpPost]
+        [Route("api/traildata/UnAssociateTrailWithFeature")]
+        public IHttpActionResult UnAssociateTrailWithFeature(int TrailID, int FeatureID)
+        {
+            Trail SelectedTrail = db.Trails.Include(t => t.Features).Where(t => t.TrailID == TrailID).FirstOrDefault();
+
+            Feature SelectedFeature = db.Features.Find(FeatureID);
+
+            // SelectedFeature.Trail.Add(SelectedTrail); -> if this method is in the FeatureController
+
+            SelectedTrail.Features.Remove(SelectedFeature);
+            db.SaveChanges();
+            return Ok();
         }
     }
 }

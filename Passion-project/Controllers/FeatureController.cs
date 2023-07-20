@@ -41,7 +41,7 @@ namespace Passion_project.Controllers
 
 
 
-        //--------------------------------------------- FEATURE DETAILS
+        //----------------------------------------- FEATURE DETAILS
         //GET: Feature/Details/5
         public ActionResult Details(int id)
         {
@@ -49,7 +49,6 @@ namespace Passion_project.Controllers
             FeatureDetails ViewModel = new FeatureDetails();
                 //curl https://localhost:44367/api/featuredata/findfeature/{id}
 
-             
                 string url = "featuredata/findfeature/"+id;
                 HttpResponseMessage response = client.GetAsync(url).Result;
 
@@ -77,7 +76,7 @@ namespace Passion_project.Controllers
 
 
         // -------------------------------------- CREATE FEATURE GET
-        // GET: Feature/New
+        // GET: Feature/NewFeature
         public ActionResult NewFeature()
         {
             return View();
@@ -110,7 +109,7 @@ namespace Passion_project.Controllers
 
 
 
-        // ------------------------------------------------------------
+        // ------------------------------------------EDIT FEATURE GET
         // GET: Feature/Edit/5
         public ActionResult Edit(int id)
 
@@ -123,11 +122,11 @@ namespace Passion_project.Controllers
 
 
         // ------------------------------------------ EDIT FEATURE
-        // POST: Feature/Edit/5
+        // POST: Feature/UpdateFeature/5
         [HttpPost]
-        public ActionResult Update(int id, Feature Feature)
+        public ActionResult UpdateFeature(int id, Feature Feature)
         {
-            string url = "featuredata/findfeature/" + id;
+            string url = "featuredata/UpdateFeature/" + id;
             string jsonpayload = jss.Serialize(Feature);
             HttpContent content = new StringContent(jsonpayload);
             content.Headers.ContentType.MediaType = "application/json";
@@ -135,7 +134,7 @@ namespace Passion_project.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                return RedirectToAction("List");
+                return RedirectToAction("ListFeatures");
             } else
             {
                 return RedirectToAction("Error");
@@ -162,14 +161,14 @@ namespace Passion_project.Controllers
         [HttpPost]
         public ActionResult Delete(int id, Feature Feature)
         {
-            string url = "featuredata/findfeature/" + id;
+            string url = "featuredata/deletefeature/" + id;
             HttpContent content = new StringContent("");
             content.Headers.ContentType.MediaType = "application/json";
             HttpResponseMessage response = client.PostAsync(url, content).Result;
 
             if (response.IsSuccessStatusCode)
             {
-                return RedirectToAction("List");
+                return RedirectToAction("ListFeatures");
 
             } else
             {

@@ -18,6 +18,9 @@ namespace Passion_project.Models
         //A LOCATION CAN HAVE (MULTIPLE) TRAILS
         [ForeignKey("Location")]
         public int LocationID { get; set; }
+        //VIRTUAL allows for a concept called "method overriding"
+        //VIRTUAL allows for flexbility and extensibility in object oriented programming
+        //VIRTUAL keyword is a special word that tells the computer that this property can be overridden or changed by other parts of the code. It allows us to add more details or behavior to this property later if we need to.
         public virtual Location Location { get; set; }
 
 

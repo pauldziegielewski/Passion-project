@@ -9,8 +9,8 @@ namespace Passion_project.Models.ViewModels
     {
 
         public TrailDto SelectedTrail { get; set; }
-        public IEnumerable<FeatureDto> ResponsibleFeatures { get; set; }
-
         public IEnumerable<FeatureDto> AvailableFeatures { get; set; }
+        public IEnumerable<FeatureDto> AFeatures { get; set; }
+
     }
 }

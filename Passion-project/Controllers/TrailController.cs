@@ -48,7 +48,7 @@ namespace Passion_project.Controllers
         }
 
 
-        // ----------------------------------------- TRAIL DETAILS
+        // ------------------------------ TRAIL DETAILS
         // GET: Trail/Show/5
         public ActionResult Show(int id)
         {
@@ -68,21 +68,29 @@ namespace Passion_project.Controllers
 
             ViewModel.SelectedTrail = SelectedTrail;
 
-            url = "featuredata/listfeaturesintrail/" + id;
+
+
+            url = "featuredata/listfeaturesfortrail/" + id;
             response = client.GetAsync(url).Result;
-            //IEnumerable<FeatureDto> ResponsibleFeatures = response.Content.ReadAsAsync<IEnumerable<FeatureDto>>().Result;
 
-                //ViewModel.ResponsibleFeatures = ResponsibleFeatures;
+            IEnumerable<FeatureDto> AvailableFeatures = response.Content.ReadAsAsync<IEnumerable<FeatureDto>>().Result;
 
-            url = "featuredata/listfeaturesnotintrail/" + id;
+      ViewModel.AvailableFeatures = AvailableFeatures;
+
+
+
+            url = "FeatureData/ListFeaturesNotInTrail/" + id;
+
             response = client.GetAsync(url).Result;
-            //IEnumerable<FeatureDto> AvailableFeatures = response.Content.ReadAsAsync<IEnumerable<FeatureDto>>().Result;
+            IEnumerable<FeatureDto> AFeatures = response.Content.ReadAsAsync<IEnumerable<FeatureDto>>().Result;
 
-            //ViewModel.AvailableFeatures = AvailableFeatures;
+            ViewModel.AFeatures = AFeatures;
 
-
+     
             return View(ViewModel);
         }
+
+
 
 
         // ---------------------------------- ERROR PAGE
@@ -92,7 +100,9 @@ namespace Passion_project.Controllers
         }
 
 
-        // --------------------------------- NEW TRAIL GET
+
+
+        // -------------------------- NEW TRAIL GET
         // GET: Trail/NewTrail
         public ActionResult NewTrail()
         {
@@ -105,7 +115,7 @@ namespace Passion_project.Controllers
         }
 
 
-        // --------------------------------------- PostNewTrail POST
+        // -----------------------PostNewTrail
         // POST: Trail/PostNewTrail
         [HttpPost]
         public ActionResult PostNewTrail(Trail trail)
@@ -141,7 +151,7 @@ namespace Passion_project.Controllers
         }
 
 
-        // ------------------------------------------- EDIT
+        // ----------------------------------- EDIT
         // GET: Trail/Edit/5
         public ActionResult Edit(int id)
         {
@@ -160,11 +170,13 @@ namespace Passion_project.Controllers
 
             ViewModel.LocationOptions = LocationOptions;
 
+            // FEATURE TO BE INCLUDED HERE?
+
             return View(ViewModel);
         }
 
 
-        // -------------------------------------------------- UPDATE
+        //---------------------------------- UPDATE
         // POST: Trail/Update/5
         [HttpPost]
         public ActionResult Update(int id, TrailDto Trail)
@@ -188,7 +200,7 @@ namespace Passion_project.Controllers
 
 
 
-        //-----------------------------------------DELETE CONFIRM TRAIL
+        //--------------------DELETE CONFIRM TRAIL
         // GET: Trail/Delete/5
    
         public ActionResult DeleteConfirm(int id)

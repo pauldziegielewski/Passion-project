@@ -1,29 +1,66 @@
 ﻿@model Passion_project.Models.ViewModels.TrailDetails
+
 @{
     ViewBag.Title = "View";
 }
+
+
 <h2>@Model.SelectedTrail.TrailName</h2>
+
+
 <nav class="nav">
     <ul>
+
         <li class="back"><a href="/Trail/List">Go back to list</a></li>
+
         <li class="update"><a href="/Trail/Edit/@Model.SelectedTrail.TrailID">Update</a></li>
+
         <li class="delete"><a style="color:#ab2020;" href="/Trail/DeleteConfirm/@Model.SelectedTrail.TrailID">Delete</a></li>
+
     </ul>
 </nav>
+
+
 <div class="row">
+
     <div class="col-md-6 col-sm-12">
+
         @{
             string imageurl = "/Content/Images/Trails/default.jpg";
             if (Model.SelectedTrail.TrailHasPic)
             {
-                imageurl = "/Content/Images/Animals/" + Model.SelectedTrail.TrailID + "." + Model.SelectedTrail.PicExtension;
+                imageurl = "/Content/Images/Trails/" + Model.SelectedTrail.TrailID + "." + Model.SelectedTrail.PicExtension;
             }
         }
-        <div><img style="display:block; max-width:100%;" alt="@Model.SelectedTrail.TrailName" src="@imageurl" /></div>
 
-        <div class="location-div">Location: <a href="/Location/LocationDetails/@Model.SelectedTrail.LocationName">@Model.SelectedTrail.LocationName</a></div>
+        <div>
+            <img style="display:block; max-width:100%;" alt="@Model.SelectedTrail.TrailName" src="@imageurl" />
+        </div>
+
+        <a href="@Url.Action("LocationDetails", "Location", new { id = Model.SelectedTrail.LocationID })">@Model.SelectedTrail.LocationName</a>
 
     </div>
+
+    <div>
+        <h2>Features in this trail @Model.SelectedTrail.TrailName</h2>
+        @foreach(var feature in Model.AvailableFeatures)
+            {
+                <a href="/Feature/Details/@feature.FeatureID">@feature.FeatureName</a>
+            }
+    </div>
+
+    <div>
+        Add new Feature @Model.SelectedTrail.TrailName
+        <select name="FeatureID">
+           @foreach(var feature in Model.AFeatures)
+            {
+               <option value="@feature.FeatureID">@feature.FeatureName</option>
+            }
+        </select>
+        <input type="submit" value="Associate Feature" />
+    </div>
+
+
     <div class="col-md-6 col-sm-12">
         <h4>Trails in this location: @Model.SelectedTrail.TrailName</h4>
 
@@ -34,11 +71,10 @@
                 <select name="FeatureID">
                     <option value="">Select Feature</option>
 
-
-
                 </select>
                 <input type="submit" value="Add Feature" />
             </form>
+
         </div>
     </div>
 

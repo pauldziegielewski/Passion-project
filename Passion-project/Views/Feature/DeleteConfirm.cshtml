@@ -1,0 +1,19 @@
+﻿@model Passion_project.Models.FeatureDto
+
+@{
+    ViewBag.Title = "DeleteConfirm";
+}
+
+<h2>Delete Confirmation</h2>
+
+<p>Are you sure you want to delete this feature?</p>
+
+<a href="/Keeper/List">Cancel</a>
+
+<h3>Name: @Model.FeatureName</h3>
+
+<form action="/Feature/Delete/@Model.FeatureID" method="POST">
+
+    <input type="submit" value="Confirm Delete" />
+
+</form>
