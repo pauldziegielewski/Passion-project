@@ -37,48 +37,52 @@
             <img style="display:block; max-width:100%;" alt="@Model.SelectedTrail.TrailName" src="@imageurl" />
         </div>
 
-        <a href="@Url.Action("LocationDetails", "Location", new { id = Model.SelectedTrail.LocationID })">@Model.SelectedTrail.LocationName</a>
+        <p>Location:
+        <a class="feature"href="@Url.Action("LocationDetails", "Location", new { id = Model.SelectedTrail.LocationID })">@Model.SelectedTrail.LocationName</a>
+        </p>
 
     </div>
 
     <div>
-        <h2>Features in this trail @Model.SelectedTrail.TrailName</h2>
-        @foreach(var feature in Model.AvailableFeatures)
-            {
-                <a href="/Feature/Details/@feature.FeatureID">@feature.FeatureName</a>
-            }
-    </div>
+        <h2>Hiking features in @Model.SelectedTrail.TrailName</h2>
+        @foreach (var feature in Model.AvailableFeatures)
+        {
+            <div class="feature-container">
+                <a class="feature"href="/Feature/Details/@feature.FeatureID">@feature.FeatureName</a>
+                </div>
+                }
+            </div>
 
-    <div>
-        Add new Feature @Model.SelectedTrail.TrailName
-        <select name="FeatureID">
-           @foreach(var feature in Model.AFeatures)
-            {
-               <option value="@feature.FeatureID">@feature.FeatureName</option>
-            }
-        </select>
-        <input type="submit" value="Associate Feature" />
-    </div>
-
-
-    <div class="col-md-6 col-sm-12">
-        <h4>Trails in this location: @Model.SelectedTrail.TrailName</h4>
-
-
-        <div>
-
-            <form method="POST" action="/Trail/Associate/@Model.SelectedTrail.TrailID">
+            <div>
+                Add new Feature @Model.SelectedTrail.TrailName
                 <select name="FeatureID">
-                    <option value="">Select Feature</option>
-
+                    @foreach (var feature in Model.AFeatures)
+                    {
+                        <option value="@feature.FeatureID">@feature.FeatureName</option>
+                    }
                 </select>
-                <input type="submit" value="Add Feature" />
-            </form>
+                <input type="submit" value="Associate Feature" />
+            </div>
+
+
+            <div class="col-md-6 col-sm-12">
+                <h4>Trails in this location: @Model.SelectedTrail.TrailName</h4>
+
+
+                <div>
+
+                    <form method="POST" action="/Trail/Associate/@Model.SelectedTrail.TrailID">
+                        <select name="FeatureID">
+                            <option value="">Select Feature</option>
+
+                        </select>
+                        <input type="submit" value="Add Feature" />
+                    </form>
+
+                </div>
+            </div>
 
         </div>
-    </div>
-
-</div>
 
 
 
@@ -88,15 +92,40 @@
         font-family: Arial, sans-serif;
         color: #333;
     }
+    .feature-container {
+        display: flex;
+        border-radius: 4px;
+   
+        gap:30px;
+    }
 
     h2 {
         color: #006400;
         margin-bottom: 20px;
+        margin-top: 40px;
     }
 
     h4 {
         color: #006400;
         margin-bottom: 10px;
+    }
+
+    .feature {
+        text-decoration: none;
+        background: green;
+        padding: 8px 14px;
+        border-radius: 4px;
+        color: white;
+        width: 160px;
+        margin-bottom: 4px;
+    }
+
+    .feature:hover {
+      
+        background: olive;
+        padding: 8px 14px;
+        border-radius: 4px;
+        color: white;
     }
 
     .row {
