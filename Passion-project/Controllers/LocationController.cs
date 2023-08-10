@@ -40,7 +40,7 @@ namespace Passion_project.Controllers
 
         //---------------------------- LOCATION DETAILS
         //GET: Location/LocationDetails/5
-        public ActionResult LocationDetails(int? id)
+        public ActionResult LocationDetails(int? id, LocationDetails viewModel)
         {
 
             if (id == null)
@@ -50,6 +50,10 @@ namespace Passion_project.Controllers
                 // For example:
                 return RedirectToAction("Index");
             }
+
+         
+
+
 
             LocationDetails ViewModel = new LocationDetails();
             string url = "locationdata/findlocation/" + id;
@@ -68,6 +72,9 @@ namespace Passion_project.Controllers
             //Show info about trails related to a location
             ViewModel.RelatedTrails = RelatedTrails;
 
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin")) ViewModel.IsAdmin = true;
+            else ViewModel.IsAdmin = false; //  this code is set to always be false for a guest user
+
 
             return View(ViewModel);
         }
@@ -84,6 +91,7 @@ namespace Passion_project.Controllers
         // ------------------------------------------- ADD FEATURE POST
         // POST: Location/Create
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(Location Location)
         {
             string url = "locationdata/addlocation";
@@ -117,6 +125,7 @@ namespace Passion_project.Controllers
         // ------------------------------------------ UPDATE LOCATION
         // POST: Location/Update/5
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Update(int id, Location Location)
         {
             string url = "locationdata/updatelocation/" + id;
@@ -151,6 +160,7 @@ namespace Passion_project.Controllers
         // ----------------------------------------- DELETE FEATURE POST
         // POST: Location/Delete/5
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id, FormCollection collection)
         {
 

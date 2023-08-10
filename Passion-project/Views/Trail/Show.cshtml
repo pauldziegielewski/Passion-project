@@ -13,32 +13,43 @@
 
         <li class="back"><a href="/Trail/List">Go back to list</a></li>
 
-        <li class="update"><a href="/Trail/Edit/@Model.SelectedTrail.TrailID">Update</a></li>
+        @{
+            if (Model.IsAdmin)
+            {
+                <li class="update"><a href="/Trail/Edit/@Model.SelectedTrail.TrailID">Update</a></li>
 
-        <li class="delete"><a style="color:#ab2020;" href="/Trail/DeleteConfirm/@Model.SelectedTrail.TrailID">Delete</a></li>
-
+                <li class="delete"><a style="color:#ab2020;" href="/Trail/DeleteConfirm/@Model.SelectedTrail.TrailID">Delete</a></li>
+            }
+        }
     </ul>
 </nav>
 
+
+<div>
+    IS ADMIN @Model.IsAdmin
+</div>
+
+
+@{
+    string imageurl = "/Content/Images/@Model.SelectedTrail.TrailID";
+    if (Model.SelectedTrail.TrailHasPic)
+    {
+        imageurl = "/Content/Images/" + Model.SelectedTrail.TrailID + "." + Model.SelectedTrail.PicExtension;
+    }
+}
 
 <div class="row">
 
     <div class="col-md-6 col-sm-12">
 
-        @{
-            string imageurl = "/Content/Images/Trails/default.jpg";
-            if (Model.SelectedTrail.TrailHasPic)
-            {
-                imageurl = "/Content/Images/Trails/" + Model.SelectedTrail.TrailID + "." + Model.SelectedTrail.PicExtension;
-            }
-        }
 
         <div>
             <img style="display:block; max-width:100%;" alt="@Model.SelectedTrail.TrailName" src="@imageurl" />
         </div>
 
-        <p>Location:
-        <a class="feature"href="@Url.Action("LocationDetails", "Location", new { id = Model.SelectedTrail.LocationID })">@Model.SelectedTrail.LocationName</a>
+        <p>
+            Location:
+            <a class="feature" href="@Url.Action("LocationDetails", "Location", new { id = Model.SelectedTrail.LocationID })">@Model.SelectedTrail.LocationName</a>
         </p>
 
     </div>
@@ -48,41 +59,38 @@
         @foreach (var feature in Model.AvailableFeatures)
         {
             <div class="feature-container">
-                <a class="feature"href="/Feature/Details/@feature.FeatureID">@feature.FeatureName</a>
-                </div>
-                }
+                <a class="feature" href="/Feature/Details/@feature.FeatureID">@feature.FeatureName</a>
             </div>
-
-            <div>
-                Add new Feature @Model.SelectedTrail.TrailName
-                <select name="FeatureID">
-                    @foreach (var feature in Model.AFeatures)
-                    {
-                        <option value="@feature.FeatureID">@feature.FeatureName</option>
-                    }
-                </select>
-                <input type="submit" value="Associate Feature" />
-            </div>
+        }
+    </div>
 
 
-            <div class="col-md-6 col-sm-12">
-                <h4>Trails in this location: @Model.SelectedTrail.TrailName</h4>
 
 
-                <div>
 
-                    <form method="POST" action="/Trail/Associate/@Model.SelectedTrail.TrailID">
-                        <select name="FeatureID">
-                            <option value="">Select Feature</option>
+    <div class="col-md-6 col-sm-12">
+        <h4>Trails in this location: @Model.SelectedTrail.TrailName</h4>
 
-                        </select>
-                        <input type="submit" value="Add Feature" />
-                    </form>
 
-                </div>
-            </div>
+        <div>
+
+
+
+            @if (Model.IsAdmin)
+            {
+                <h4>Upload New Trail Image</h4>
+                <form action="/Trail/UploadTrailPic/@Model.SelectedTrail.TrailID" method="post" enctype="multipart/form-data">
+                    <input type="file" name="imageFile" accept="image/*" />
+                    <input type="submit" value="Upload" />
+                </form>
+            }
+
+
 
         </div>
+    </div>
+
+</div>
 
 
 
@@ -92,11 +100,11 @@
         font-family: Arial, sans-serif;
         color: #333;
     }
+
     .feature-container {
         display: flex;
         border-radius: 4px;
-   
-        gap:30px;
+        gap: 30px;
     }
 
     h2 {
@@ -120,13 +128,12 @@
         margin-bottom: 4px;
     }
 
-    .feature:hover {
-      
-        background: olive;
-        padding: 8px 14px;
-        border-radius: 4px;
-        color: white;
-    }
+        .feature:hover {
+            background: olive;
+            padding: 8px 14px;
+            border-radius: 4px;
+            color: white;
+        }
 
     .row {
         display: flex;

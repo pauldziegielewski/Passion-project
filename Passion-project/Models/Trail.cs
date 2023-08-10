@@ -26,6 +26,9 @@ namespace Passion_project.Models
 
         //A (TRAIL) CAN HAVE MULTIPLE HIKING (FEATURES)
         public ICollection<Feature> Features { get; set; }
+
+        public bool TrailHasPic { get; set; }
+        public string PicExtension { get; set; }
     }
 
     public class TrailDto

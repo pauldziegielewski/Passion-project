@@ -5,7 +5,12 @@
 
 <h1>List Locations</h1>
 
-<a href="/Location/New">New Location</a>
+@if (User.IsInRole("Admin"))
+{
+    <a href="/Trail/NewTrail">New Location</a>
+}
+
+
 @foreach (var location in Model)
 {
 

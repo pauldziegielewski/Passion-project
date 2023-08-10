@@ -4,7 +4,12 @@
 }
 
 <h1>List of Trails in Ontario</h1>
-<a href="/Trail/NewTrail">New Trail</a>
+@if (User.IsInRole("Admin"))
+{
+    <a href="/Trail/NewTrail">New Trail</a>
+}
+
+
 
 <div class="list-container">
     @foreach (var trail in Model)

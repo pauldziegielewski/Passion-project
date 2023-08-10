@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Passion_project.Models;
@@ -33,6 +36,8 @@ namespace Passion_project.Controllers
             {
                 TrailID = a.TrailID,
                 TrailName = a.TrailName,
+                TrailHasPic = a.TrailHasPic,
+                PicExtension = a.PicExtension,
                 LocationID = a.LocationID,
                 LocationName = a.Location.LocationName
 
@@ -187,6 +192,8 @@ namespace Passion_project.Controllers
             }
 
             db.Entry(trail).State = EntityState.Modified;
+            db.Entry(trail).Property(a => a.TrailHasPic).IsModified = false;
+            db.Entry(trail).Property(a => a.PicExtension).IsModified = false;
 
             try
             {
@@ -328,5 +335,101 @@ namespace Passion_project.Controllers
             db.SaveChanges();
             return Ok();
         }
+
+
+
+
+        /// <summary>
+        /// Receives animal picture data, uploads it to the webserver and updates the animal's HasPic option
+        /// </summary>
+        /// <param name="id">the animal id</param>
+        /// <returns>status code 200 if successful.</returns>
+        /// <example>
+        /// curl -F animalpic=@file.jpg "https://localhost:xx/api/animaldata/uploadanimalpic/2"
+        /// POST: api/animalData/UpdateanimalPic/3
+        /// HEADER: enctype=multipart/form-data
+        /// FORM-DATA: image
+        /// </example>
+        /// https://stackoverflow.com/questions/28369529/how-to-set-up-a-web-api-controller-for-multipart-form-data
+
+        [HttpPost]
+        public IHttpActionResult UploadTrailPic(int id)
+        {
+
+            bool haspic = false;
+            string PicExtension;
+
+            if (Request.Content.IsMimeMultipartContent())
+            {
+               
+
+                int numfiles = HttpContext.Current.Request.Files.Count;
+                Debug.WriteLine("Files Received: " + numfiles);
+
+                //Check if a file is posted
+                if (numfiles == 1 && HttpContext.Current.Request.Files[0] != null)
+                {
+                    var trailPic = HttpContext.Current.Request.Files[0];
+                    //Check if the file is empty
+                    if (trailPic.ContentLength > 0)
+                    {
+                        //establish valid file types (can be changed to other file extensions if desired!)
+                        var valtypes = new[] { "jpeg", "jpg", "png", "gif" };
+                        var extension = Path.GetExtension(trailPic.FileName).Substring(1);
+                        //Check the extension of the file
+                        if (valtypes.Contains(extension))
+                        {
+                            try
+                            {
+                                //file name is the id of the image
+                                string fn = id + "." + extension;
+
+                                //get a direct file path to ~/Content/images/{id}.{extension}
+                                string path = Path.Combine(HttpContext.Current.Server.MapPath("~/Content/Images/"), fn);
+
+                                //save the file
+                                trailPic.SaveAs(path);
+
+                                //if these are all successful then we can set these fields
+                                haspic = true;
+                                PicExtension = extension;
+
+                                //Update the animal haspic and picextension fields in the database
+                                Trail SelectedTrail = db.Trails.Find(id);
+                                SelectedTrail.TrailHasPic = haspic;
+                                SelectedTrail.PicExtension = extension;
+                                db.Entry(SelectedTrail).State = EntityState.Modified;
+
+                                db.SaveChanges();
+
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine("animal Image was not saved successfully.");
+                                Debug.WriteLine("Exception:" + ex);
+                                return BadRequest();
+                            }
+                        }
+                    }
+
+                }
+
+                return Ok();
+            }
+            else
+            {
+                //not multipart form data
+                return BadRequest();
+
+            }
+
+        }
+
+
+
+
+
+
+
     }
 }

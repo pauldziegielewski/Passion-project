@@ -63,7 +63,10 @@ namespace Passion_project.Controllers
 
             ViewModel.TrailFeatures = TrailFeatures;
 
-                return View(ViewModel);
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin")) ViewModel.IsAdmin = true;
+            else ViewModel.IsAdmin = false; //  this code is set to always be false for a guest user
+
+            return View(ViewModel);
          }
 
 
@@ -87,6 +90,7 @@ namespace Passion_project.Controllers
         // ---------------------------------------- CREATE FEATURE POST
         // POST: Feature/Create
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(Feature feature)
         {
             string url = "featuredata/addfeature";
@@ -124,6 +128,7 @@ namespace Passion_project.Controllers
         // ------------------------------------------ EDIT FEATURE
         // POST: Feature/UpdateFeature/5
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult UpdateFeature(int id, Feature Feature)
         {
             string url = "featuredata/UpdateFeature/" + id;
@@ -159,6 +164,7 @@ namespace Passion_project.Controllers
         // ----------------------------------------- DELETE FEATURE POST
         // POST: Feature/Delete/5
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id, Feature Feature)
         {
             string url = "featuredata/deletefeature/" + id;

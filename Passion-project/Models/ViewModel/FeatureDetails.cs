@@ -10,6 +10,7 @@ namespace Passion_project.Models.ViewModel
 
         public FeatureDto SelectedFeature { get; set; }
         public IEnumerable<TrailDto> TrailFeatures { get; set; }
+        public bool IsAdmin { get; set; }
 
     }
 }

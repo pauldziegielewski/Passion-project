@@ -12,15 +12,23 @@
 
             <li><a class="btn" href="/Feature/ListFeatures">Go back to list</a></li>
 
-            <li><a class="btn"href="/Feature/Edit/@Model.SelectedFeature.FeatureID">Update</a></li>
 
-            <li><a class="delete"style="color:#ab2020;" href="/Feature/DeleteConfirm/@Model.SelectedFeature.FeatureID">Delete</a></li>
+            @{
+                if (Model.IsAdmin)
+                {
+                    <li><a class="btn" href="/Feature/Edit/@Model.SelectedFeature.FeatureID">Update</a></li>
+
+                    <li><a class="delete" style="color:#ab2020;" href="/Feature/DeleteConfirm/@Model.SelectedFeature.FeatureID">Delete</a></li>
+
+                }
+            }
 
         </ul>
     </nav>
 
-    <div class="row">
 
+    <div class="row">
+      
         <div class="col-md-6 col-sm-12">
             <div>Feature: @Model.SelectedFeature.FeatureName</div>
         </div>

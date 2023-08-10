@@ -5,7 +5,11 @@
 
 <h1>List Features</h1>
 
-<a href="/Feature/NewFeature">New Feature</a>
+@if (User.IsInRole("Admin"))
+{
+    <a href="/Trail/NewTrail">New Feature</a>
+}
+ 
 
 @foreach (var feature in Model)
 {

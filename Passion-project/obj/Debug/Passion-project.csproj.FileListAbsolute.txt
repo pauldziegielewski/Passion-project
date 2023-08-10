@@ -120,3 +120,4 @@ C:\Users\paulj\Desktop\Web Development\5112\Christine\Passion-project\Passion-pr
 C:\Users\paulj\Desktop\Web Development\5112\Christine\Passion-project\Passion-project\obj\Debug\Passion_project.Migrations.features.resources
 C:\Users\paulj\Desktop\Web Development\5112\Christine\Passion-project\Passion-project\obj\Debug\Passion_project.Migrations.trailslocations.resources
 C:\Users\paulj\Desktop\Web Development\5112\Christine\Passion-project\Passion-project\obj\Debug\Passion_project.Migrations.trailsfeatures.resources
+C:\Users\paulj\Desktop\Web Development\5112\Christine\Passion-project\Passion-project\obj\Debug\Passion_project.Migrations.trailPic.resources

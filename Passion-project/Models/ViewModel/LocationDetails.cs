@@ -10,6 +10,8 @@ namespace Passion_project.Models.ViewModels
     {
         public LocationDto SelectedLocation { get; set; }
         public IEnumerable<TrailDto> RelatedTrails { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 
 

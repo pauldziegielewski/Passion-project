@@ -8,7 +8,7 @@ using System.Diagnostics;
 using Passion_project.Models;
 using Passion_project.Models.ViewModels;
 using System.Web.Script.Serialization;
-
+using System.Security.Policy;
 
 namespace Passion_project.Controllers
 {
@@ -53,6 +53,9 @@ namespace Passion_project.Controllers
         public ActionResult Show(int id)
         {
             TrailDetails ViewModel = new TrailDetails();
+
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin")) ViewModel.IsAdmin = true;
+            else ViewModel.IsAdmin = false; //  this code is set to always be false for a guest user
           
             //objective: communicate with our animal data api to retrieve one trail by ID
             //curl https://localhost:44367/api/traildata/findtrail/{id}
@@ -118,6 +121,7 @@ namespace Passion_project.Controllers
         // -----------------------PostNewTrail
         // POST: Trail/PostNewTrail
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult PostNewTrail(Trail trail)
         {
             Debug.WriteLine("The json payload is: ");
@@ -179,30 +183,62 @@ namespace Passion_project.Controllers
         //---------------------------------- UPDATE
         // POST: Trail/Update/5
         [HttpPost]
-        public ActionResult Update(int id, TrailDto Trail)
+        [Authorize(Roles = "Admin")]
+        public ActionResult Update(int id, TrailDto Trail, HttpPostedFileBase TrailPic)
         {
+            // Construct the URL for updating the trail
+            string updateUrl = "traildata/updatetrail/" + id;
 
-            string url = "traildata/updatetrail/"+ id;
+            // Serialize the Trail object to JSON
             string jsonPayload = jss.Serialize(Trail);
+
+            // Create the HTTP content for the API request
             HttpContent content = new StringContent(jsonPayload);
             content.Headers.ContentType.MediaType = "application/json";
-            HttpResponseMessage response = client.PostAsync(url, content).Result;
-            
-            if (response.IsSuccessStatusCode )
+
+            // Send the API request to update the trail
+            HttpResponseMessage updateResponse = client.PostAsync(updateUrl, content).Result;
+
+            // Check if the trail update was successful
+            if (!updateResponse.IsSuccessStatusCode)
             {
-                return RedirectToAction("List");
-            } 
-            else
-            {
+                // Redirect to the "Error" action if the update failed
                 return RedirectToAction("Error");
             }
+
+            // If an image was provided, upload it
+            if (TrailPic != null)
+            {
+                // Construct the URL for uploading the image
+                string uploadImageUrl = "TrailData/UploadTrailPic/"+ id;
+
+                // Create the content for the image upload
+                MultipartFormDataContent requestContent = new MultipartFormDataContent();
+                HttpContent imageContent = new StreamContent(TrailPic.InputStream);
+
+                requestContent.Add(imageContent, "TrailPic", TrailPic.FileName);
+
+                // Upload the image
+                HttpResponseMessage imageUploadResponse = client.PostAsync(uploadImageUrl, requestContent).Result;
+
+                // Check if the image upload was successful
+                if (!imageUploadResponse.IsSuccessStatusCode)
+                {
+                    // Redirect to the "Error" action if the image upload failed
+                    return RedirectToAction("Error");
+                }
+            }
+
+            // Redirect to the "List" action after successful update or image upload
+            return RedirectToAction("List");
         }
+
 
 
 
         //--------------------DELETE CONFIRM TRAIL
         // GET: Trail/Delete/5
-   
+
         public ActionResult DeleteConfirm(int id)
         {
             string url = "traildata/findtrail/" + id;
@@ -214,6 +250,7 @@ namespace Passion_project.Controllers
 
         // POST: Trail/Delete/5
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             string url = "traildata/deletetrail/" + id;
@@ -230,6 +267,11 @@ namespace Passion_project.Controllers
                 return RedirectToAction("Error");
             }
         }
+
+
+
+
+
 
 
 

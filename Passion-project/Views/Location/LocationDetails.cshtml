@@ -7,16 +7,24 @@
 
 
 
+
+
 <nav>
     <ul>
+        <li><a class="btn" href="/Location/Listlocations">Go back to list</a></li>
 
-        <li><a class="btn"href="/Location/Listlocations">Go back to list</a></li>
+        @{
+            if (Model.IsAdmin)
+            {
+                <li><a class="btn" href="/Location/Edit/@Model.SelectedLocation.LocationID">Update</a></li>
 
-        <li><a class="btn"href="/Location/Edit/@Model.SelectedLocation.LocationID">Update</a></li>
+                <li>
+                    <a class="delete" style="color:#ab2020;" href="/Location/DeleteConfirm/@Model.SelectedLocation.LocationID">Delete</a>
+                </li>
+            }
+        }
 
-        <li>
-           <a class="delete" style="color:#ab2020;" href="/Location/DeleteConfirm/@Model.SelectedLocation.LocationID">Delete</a>
-        </li>
+
 
     </ul>
 </nav>
@@ -24,14 +32,14 @@
 
 
 
-    <div class="col-md-6 col-sm-12 test container">
-        <h3>@(Model.SelectedLocation.LocationName)</h3>
-        @foreach (var trail in Model.RelatedTrails)
-        {
-            <a class="LocationList" href="/Trail/Show/@trail.TrailID">@trail.TrailName</a>
+<div class="col-md-6 col-sm-12 test container">
+    <h3>@(Model.SelectedLocation.LocationName)</h3>
+    @foreach (var trail in Model.RelatedTrails)
+    {
+        <a class="LocationList" href="/Trail/Show/@trail.TrailID">@trail.TrailName</a>
 
-        }
-    </div>
+    }
+</div>
 
 
 
@@ -69,6 +77,7 @@
         flex-direction: column;
         margin-top: 30px;
     }
+
     .btn {
         display: inline-block;
         padding: 10px 20px;
@@ -174,13 +183,13 @@
         color: white;
     }
 
-    .LocationList:hover {
-        text-decoration: none;
-        padding: 8px 14px;
-        background: green;
-        border-radius: 4px;
-        margin-bottom: 10px;
-        background: olive;
-        color: white;
-    }
+        .LocationList:hover {
+            text-decoration: none;
+            padding: 8px 14px;
+            background: green;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background: olive;
+            color: white;
+        }
 </style>
